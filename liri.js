@@ -3,8 +3,9 @@ var keys = require("./keys.js");
 var twitterCredentials = keys.twitterKeys;
 
 var command = process.argv[2];
+var query = process.argv[3];
 
-if(command === "my-tweets") {
+var myTweets = function() {
 	var Twitter = require('twitter');
 
 	var client = new Twitter({
@@ -32,10 +33,10 @@ if(command === "my-tweets") {
 	  	}
 	  }
 	});
-} else if(command === "spotify-this-song") {
+}
+
+var spotifyThisSong = function(trackQuery) {
 	var spotify = require('spotify');
-	
-	var trackQuery = process.argv[3];
 
 	if(trackQuery === undefined) {
 		trackQuery = "the sign ace of base";
@@ -58,10 +59,10 @@ if(command === "my-tweets") {
 	    console.log("Preview Link: " + data.tracks.items[0].preview_url);
 	    console.log("Album:        " + data.tracks.items[0].album.name);
 	});
-} else if(command === "movie-this") {
-	var request = require("request");
+}
 
-	var movieQuery = process.argv[3];
+var movieThis = function(movieQuery) {
+	var request = require("request");
 
 	if(movieQuery === undefined) {
 		movieQuery = "mr nobody";
@@ -87,6 +88,39 @@ if(command === "my-tweets") {
 	    }
 	  }
 	});
-} else if(command === "do-what-it-says") {
+}
 
+if(command === "my-tweets") {
+	myTweets();
+} else if(command === "spotify-this-song") {
+	spotifyThisSong(query);
+} else if(command === "movie-this") {
+	movieThis(query);
+} else if(command === "do-what-it-says") {
+	var fs = require("fs");
+
+	fs.readFile("random.txt", "utf-8", function(error, data) {
+		var command;
+		var query;
+
+		if(data.indexOf(",") !== -1) {
+			var dataArr = data.split(",");
+			command = dataArr[0];
+			query = dataArr[1];
+		} else {
+			command = data;
+		}
+
+		if(command === "my-tweets") {
+			myTweets();
+		} else if(command === "spotify-this-song") {
+			spotifyThisSong(query);
+		} else if(command === "movie-this") {
+			movieThis(query);
+		} else {
+			console.log("Command read from file is not recognized! Please try again.")
+		}
+	});
+} else {
+	console.log("Command not recognized! Please try again.")
 }
