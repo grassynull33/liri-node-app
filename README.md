@@ -1,8 +1,5 @@
 # liri-node-app
 
-## Live Link
- - https://yoonslee.github.io/liri-node-app/
-
 ## Requirements
 - Make a Node.js app that depends on user input from the command line
 - Integrate Twitter, Spotify, and OMDb APIs via the appropriate NPM modules
