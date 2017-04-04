@@ -33,7 +33,31 @@ if(command === "my-tweets") {
 	  }
 	});
 } else if(command === "spotify-this-song") {
+	var spotify = require('spotify');
+	
+	var trackQuery = process.argv[3];
 
+	if(trackQuery === undefined) {
+		trackQuery = "the sign ace of base";
+	}
+
+	spotify.search({ type: 'track', query: trackQuery }, function(err, data) {
+	    if ( err ) {
+	        console.log('Error occurred: ' + err);
+	        return;
+	    }
+	 
+	 		for(var i = 0; i < data.tracks.items[0].artists.length; i++) {
+	 			if(i === 0) {
+	 				console.log("Artist(s):    " + data.tracks.items[0].artists[i].name);
+	 			} else {
+	 				console.log("              " + data.tracks.items[0].artists[i].name);
+	 			}
+	 		}
+	    console.log("Song:         " + data.tracks.items[0].name);
+	    console.log("Preview Link: " + data.tracks.items[0].preview_url);
+	    console.log("Album:        " + data.tracks.items[0].album.name);
+	});
 } else if(command === "movie-this") {
 
 } else if(command === "do-what-it-says") {
