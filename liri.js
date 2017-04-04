@@ -59,7 +59,34 @@ if(command === "my-tweets") {
 	    console.log("Album:        " + data.tracks.items[0].album.name);
 	});
 } else if(command === "movie-this") {
+	var request = require("request");
 
+	var movieQuery = process.argv[3];
+
+	if(movieQuery === undefined) {
+		movieQuery = "mr nobody";
+	}
+
+	request("http://www.omdbapi.com/?t=" + movieQuery + "&y=&plot=short&r=json", function(error, response, body) {
+	  if (!error && response.statusCode === 200) {
+	    console.log("* Title of the movie:         " + JSON.parse(body).Title);
+	    console.log("* Year the movie came out:    " + JSON.parse(body).Year);
+	    console.log("* IMDB Rating of the movie:   " + JSON.parse(body).imdbRating);
+	    console.log("* Country produced:           " + JSON.parse(body).Country);
+	    console.log("* Language of the movie:      " + JSON.parse(body).Language);
+	    console.log("* Plot of the movie:          " + JSON.parse(body).Plot);
+	    console.log("* Actors in the movie:        " + JSON.parse(body).Actors);
+
+	    for(var i = 0; i < JSON.parse(body).Ratings.length; i++) {
+	    	if(JSON.parse(body).Ratings[i].Source === "Rotten Tomatoes") {
+	    		console.log("* Rotten Tomatoes Rating:     " + JSON.parse(body).Ratings[i].Value);
+	    		if(JSON.parse(body).Ratings[i].Website !== undefined) {
+	    			console.log("* Rotten Tomatoes URL:        " + JSON.parse(body).Ratings[i].Website);
+	    		}
+	    	}
+	    }
+	  }
+	});
 } else if(command === "do-what-it-says") {
 
 }
